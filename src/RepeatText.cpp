@@ -26,7 +26,7 @@ void RepeatText(const FunctionCallbackInfo<Value>& args){
 
     // Change string to c++ type
     std::string str = std::string(*tmp); 
-    std::string str_ret = str;
+    std::string str_ret;
 
     for (int i=0; i < num; i++) 
     {
