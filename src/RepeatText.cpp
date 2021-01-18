@@ -9,20 +9,20 @@ using v8::String;
 using v8::Value;
 using v8::Handle;
 
-void RepeatText(const FunctionCallbackInfo<Value>& args){
-  Isolate* isolate = args.GetIsolate();
+NAN_METHOD (RepeatText) {
+  Isolate* isolate = info.GetIsolate();
   
   // Check the number of arguments passed.
-  if (args.Length() != 2 || !args[0]->IsString() || !args[1]->IsNumber()) {
+  if (info.Length() != 2 || !info[0]->IsString() || !info[1]->IsNumber()) {
     // Throw an Error that is passed back to JavaScript
     isolate->ThrowException(Exception::TypeError(
         String::NewFromUtf8(isolate, "Problem with input")));
     return;
   }
 
-  if (args[0]->IsString()) {
-    String::Utf8Value tmp(args[0]->ToString());
-    int num = args[1]->NumberValue();
+  if (info[0]->IsString()) {
+    String::Utf8Value tmp(info[0]->ToString());
+    int num = info[1]->NumberValue();
 
     // Change string to c++ type
     std::string str = std::string(*tmp); 
@@ -35,13 +35,13 @@ void RepeatText(const FunctionCallbackInfo<Value>& args){
 
     // Revert to v8 string and return 
     v8::Local<v8::String> v8String = v8::String::NewFromUtf8(isolate, str_ret.c_str(), v8::String::kNormalString);
-    args.GetReturnValue().Set(v8String);
+    info.GetReturnValue().Set(v8String);
   }
 
 }
 
-void Init(Handle<Object> exports) {
-  NODE_SET_METHOD(exports, "RepeatText", RepeatText);
+NAN_MODULE_INIT(Init) {
+  NAN_EXPORT(target, RepeatText);
 }
 
 NODE_MODULE(RepeatText, Init)
